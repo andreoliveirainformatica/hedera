@@ -4,8 +4,8 @@ import com.hedera.hedera.entitiy.Seller;
 
 public interface SellerManager {
 
-   void createSelller(final Seller seller);
+    Seller createSelller(final Seller seller);
 
-   long getBalancer(final Seller seller);
+    long getBalance(final Seller seller);
 
 }

@@ -1,0 +1,30 @@
+package com.hedera.hedera.gateway.impl;
+
+import com.hedera.hashgraph.sdk.Client;
+import com.hedera.hashgraph.sdk.HederaException;
+import com.hedera.hashgraph.sdk.account.AccountId;
+import com.hedera.hashgraph.sdk.crypto.Key;
+import com.hedera.hedera.gateway.HederaClientGateway;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+/**
+ * Created by Grazeffe on 2019-08-08.
+ * https://github.com/Grazeffe
+ */
+@Component
+@RequiredArgsConstructor
+public class HederaClientGatewayImpl implements HederaClientGateway {
+
+    private final Client hederaClient;
+
+    @Override
+    public AccountId createAccount(Key publicKey, long initialBalance) throws HederaException {
+        return hederaClient.createAccount(publicKey, initialBalance);
+    }
+
+    @Override
+    public long getAccountBalance(AccountId accountId) throws HederaException {
+        return hederaClient.getAccountBalance(accountId);
+    }
+}
