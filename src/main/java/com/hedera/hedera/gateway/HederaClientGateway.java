@@ -11,7 +11,7 @@ import com.hedera.hashgraph.sdk.crypto.Key;
 
 public interface HederaClientGateway {
 
-    AccountId createAccount(final Key publicKey, final long initialBalance) throws HederaException;
+    AccountId createAccount(final Key publicKey) throws HederaException;
 
     long getAccountBalance(final AccountId accountId) throws HederaException;
 }

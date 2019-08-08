@@ -19,8 +19,8 @@ public class HederaClientGatewayImpl implements HederaClientGateway {
     private final Client hederaClient;
 
     @Override
-    public AccountId createAccount(Key publicKey, long initialBalance) throws HederaException {
-        return hederaClient.createAccount(publicKey, initialBalance);
+    public AccountId createAccount(Key publicKey) throws HederaException {
+        return hederaClient.createAccount(publicKey, 0L);
     }
 
     @Override

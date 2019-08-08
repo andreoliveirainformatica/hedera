@@ -1,20 +1,25 @@
 package com.hedera.hedera.entitiy;
 
-import com.hedera.hashgraph.sdk.account.AccountId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
+@Document
 public class Seller {
 
-    private int id;
+    @Id
+    private String id;
 
     private String nome;
 
     private BigDecimal commisisonPercent;
 
-    private AccountId accountId;
+    private String accountId;
 }
