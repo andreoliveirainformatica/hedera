@@ -8,10 +8,6 @@ import com.hedera.hedera.gateway.HederaClientGateway;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/**
- * Created by Grazeffe on 2019-08-08.
- * https://github.com/Grazeffe
- */
 @Component
 @RequiredArgsConstructor
 public class HederaClientGatewayImpl implements HederaClientGateway {

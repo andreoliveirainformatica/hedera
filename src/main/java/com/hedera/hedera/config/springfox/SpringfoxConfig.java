@@ -27,9 +27,6 @@ public class SpringfoxConfig {
     @Value("${spring.application.name}")
     private String applicationName;
 
-    @Value("${spring.profiles.active}")
-    private String profile;
-
     @Bean
     public Docket gatewayApi() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -37,7 +34,7 @@ public class SpringfoxConfig {
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.regex("/api/.*"))
                 .build()
-                .pathMapping(getPathMapping(profile))
+                .pathMapping(getPathMapping("dev"))
                 .useDefaultResponseMessages(false)
                 .globalResponseMessage(RequestMethod.POST, defaultErrorsMessage())
                 .apiInfo(apiInfo());

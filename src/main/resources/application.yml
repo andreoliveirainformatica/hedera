@@ -1,6 +1,17 @@
+port: 8080
+
 spring:
   application:
     name: Hedera
   data:
     mongodb:
-      uri: mongodb://localhost:27017/dbCarriers
+      uri: mongodb://localhost:27017/hedera
+
+hedera:
+  node:
+    id: 0.0.3
+    address: 0.testnet.hedera.com:50211
+  operator:
+    id: 0.0.38703
+    key: 302e020100300506032b6570042204207749c0685b6d86628481e56956d764eacd5aa8bc135d460b59339a03e0513eb2
+
