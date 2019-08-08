@@ -16,6 +16,7 @@ public class HederaClientGatewayImpl implements HederaClientGateway {
 
     @Override
     public AccountId createAccount(Key publicKey) throws HederaException {
+        hederaClient.setMaxTransactionFee(100_000_000L);
         return hederaClient.createAccount(publicKey, 0L);
     }
 

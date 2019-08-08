@@ -34,7 +34,7 @@ public class SpringfoxConfig {
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.regex("/api/.*"))
                 .build()
-                .pathMapping(getPathMapping("dev"))
+                .pathMapping(getPathMapping("local"))
                 .useDefaultResponseMessages(false)
                 .globalResponseMessage(RequestMethod.POST, defaultErrorsMessage())
                 .apiInfo(apiInfo());
