@@ -8,7 +8,6 @@ public interface CommissionManager {
 
     void credit(Seller seller, BigDecimal value);
 
-    void deduct(Seller seller, BigDecimal value);
-
+    void debit(Seller seller, BigDecimal value);
 
 }

@@ -14,4 +14,8 @@ public interface HederaClientGateway {
     AccountId createAccount(final Key publicKey) throws HederaException;
 
     long getAccountBalance(final AccountId accountId) throws HederaException;
+
+    void transferCredit(AccountId accountId, long amount) throws HederaException;
+
+    void transferDebit(AccountId accountId, long amount) throws HederaException;
 }
