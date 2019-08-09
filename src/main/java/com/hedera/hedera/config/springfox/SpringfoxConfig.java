@@ -45,7 +45,7 @@ public class SpringfoxConfig {
                 new ResponseMessageBuilder().code(NOT_FOUND.value()).message("Data not found").build(),
                 new ResponseMessageBuilder()
                         .code(INTERNAL_SERVER_ERROR.value())
-                        .message("Internal error on fb-chargeback")
+                        .message("Internal error on Hedera")
                         .build(),
                 new ResponseMessageBuilder()
                         .code(BAD_REQUEST.value())
@@ -53,14 +53,14 @@ public class SpringfoxConfig {
                         .build(),
                 new ResponseMessageBuilder()
                         .code(BAD_GATEWAY.value())
-                        .message("Electronic Authorizer")
+                        .message("Hedera")
                         .build());
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Electronic Authorizer")
-                .description("API for Electronic Authorizer")
+                .title("Hedera")
+                .description("API for Hedera")
                 .version("1.0")
                 .build();
     }

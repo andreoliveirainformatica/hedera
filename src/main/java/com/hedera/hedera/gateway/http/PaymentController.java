@@ -24,10 +24,10 @@ public class PaymentController {
         return ResponseEntity.ok(paymentManager.createToken(paymentCard));
     }
 
-    @PostMapping(
-            value = "token/{}",
+    @GetMapping(
+            value = "token/{tokenId}",
             produces = {APPLICATION_JSON_VALUE})
-    public ResponseEntity<PaymentCard> getPaymentCard(@RequestBody final String tokenId) {
+    public ResponseEntity<PaymentCard> getPaymentCard2(@PathVariable final String tokenId) {
         return ResponseEntity.ok(paymentManager.getPaymentCar(tokenId));
     }
 
