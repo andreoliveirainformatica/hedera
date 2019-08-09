@@ -24,6 +24,13 @@ public class SellerController {
     }
 
     @GetMapping(
+            value = "{sellerId}",
+            produces = {APPLICATION_JSON_VALUE})
+    public ResponseEntity<Seller> getSeller(@PathVariable String sellerId) {
+        return ResponseEntity.ok(sellerManager.getSelller(sellerId));
+    }
+
+    @GetMapping(
             value = "balance/{sellerId}",
             produces = {APPLICATION_JSON_VALUE})
     public ResponseEntity<Long> getAccountSeller(@PathVariable String sellerId) {
