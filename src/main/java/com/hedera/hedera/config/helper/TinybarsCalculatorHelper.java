@@ -18,7 +18,7 @@ public class TinybarsCalculatorHelper {
   }
 
   public long toTinybars(final long amountInCents) {
-    final long amountInCentsDolar = amountInCents / 4;
+    final long amountInCentsDolar = amountInCents;
     return (long) (TINYBAR_REPRESENTS_ONE_CENT * amountInCentsDolar);
   }
 }

@@ -1,6 +1,5 @@
 package com.hedera.hedera.gateway.http;
 
-import com.hedera.hashgraph.sdk.contract.ContractInfo;
 import com.hedera.hedera.entitiy.Seller;
 import com.hedera.hedera.usecase.SellerManager;
 import lombok.RequiredArgsConstructor;
@@ -39,10 +38,9 @@ public class SellerController {
     }
 
     @GetMapping(
-            value = "contract/{sellerId}",
+            value = "commission/{sellerId}",
             produces = {APPLICATION_JSON_VALUE})
-    public ResponseEntity<ContractInfo> getcommissionSeller(@PathVariable String sellerId) {
-        final ContractInfo contractInfo = sellerManager.getContractInfo(sellerId);
-        return ResponseEntity.ok(contractInfo);
+    public ResponseEntity<String> getcommissionSeller(@PathVariable String sellerId) {
+        return ResponseEntity.ok(sellerManager.getContractInfo(sellerId));
     }
 }

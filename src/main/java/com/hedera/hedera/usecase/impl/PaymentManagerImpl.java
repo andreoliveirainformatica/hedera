@@ -59,19 +59,25 @@ public class PaymentManagerImpl implements PaymentManager {
 
         final Order order = orderManager.findById(orderNumber);
 
+
+        final Map<Seller, BigDecimal> sellerBigDecimalMap = splitPayment(order);
+
+        sellerBigDecimalMap.forEach(this::transferCredit);
+
         new ArrayList<>(order
                 .getPayments())
                 .forEach(p -> {
                     hederaClientGateway.deleteFile(p.getToken());
                 });
-
-
-        final Map<Seller, BigDecimal> sellerBigDecimalMap = splitPayment(order);
-
-        sellerBigDecimalMap.forEach(this::transferCredit);
     }
 
     private void transferCredit(Seller seller, BigDecimal value) {
+
+        validateCommission(seller);
+
+
+
+
         try {
             final BigDecimal valueToTransfer = value.multiply((BigDecimal.valueOf(100).subtract(seller.getCommissionPercent())).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_EVEN));
             hederaClientGateway.transferCredit(
@@ -80,6 +86,13 @@ public class PaymentManagerImpl implements PaymentManager {
         } catch (HederaException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
+        }
+    }
+
+    private void validateCommission(Seller seller) {
+        final String smartContract = hederaClientGateway.getSmartContract(seller.getContractId());
+        if (!seller.getCommissionPercent().equals(new BigDecimal(smartContract))) {
+            throw new RuntimeException("Invalid Seller Commission! Seller Commission: " + seller.getCommissionPercent().toString() + " Contract Commission " + smartContract );
         }
     }
 

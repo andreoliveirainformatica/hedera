@@ -23,7 +23,7 @@ public class ConvertController {
     private final TinybarsCalculatorHelper tinybarsCalculatorHelper;
 
     @GetMapping(
-            value = "toreal/{tiny}",
+            value = "todollar/{tiny}",
             produces = {APPLICATION_JSON_VALUE})
     public ResponseEntity<BigDecimal> toreal(@PathVariable final long tiny) {
         return ResponseEntity.ok(BigDecimal.valueOf(tinybarsCalculatorHelper.toRealInCents(tiny)).divide(BigDecimal.valueOf(100),2, RoundingMode.HALF_EVEN));

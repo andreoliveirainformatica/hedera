@@ -3,7 +3,6 @@ package com.hedera.hedera.usecase.impl;
 import com.hedera.hashgraph.sdk.HederaException;
 import com.hedera.hashgraph.sdk.account.AccountId;
 import com.hedera.hashgraph.sdk.contract.ContractId;
-import com.hedera.hashgraph.sdk.contract.ContractInfo;
 import com.hedera.hashgraph.sdk.crypto.ed25519.Ed25519PrivateKey;
 import com.hedera.hedera.entitiy.Seller;
 import com.hedera.hedera.gateway.HederaClientGateway;
@@ -54,9 +53,9 @@ public class SellerManagerImpl implements SellerManager {
 
 
     @Override
-    public ContractInfo getContractInfo(String sellerId) {
+    public String getContractInfo(String sellerId) {
         Seller seller = sellerGateway.findById(sellerId).get();
-        return hederaClientGateway.getSmartContract(seller.getContractId());
+        return hederaClientGateway.getSmartContract(seller.getContractId()).concat("%");
     }
 
     @Override

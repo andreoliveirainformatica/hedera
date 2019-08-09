@@ -3,7 +3,6 @@ package com.hedera.hedera.gateway;
 import com.hedera.hashgraph.sdk.HederaException;
 import com.hedera.hashgraph.sdk.account.AccountId;
 import com.hedera.hashgraph.sdk.contract.ContractId;
-import com.hedera.hashgraph.sdk.contract.ContractInfo;
 import com.hedera.hashgraph.sdk.crypto.Key;
 import com.hedera.hashgraph.sdk.file.FileId;
 
@@ -27,5 +26,5 @@ public interface HederaClientGateway {
 
     ContractId createSmartContract(BigDecimal commission);
 
-    ContractInfo getSmartContract(String contractIdParam);
+    String getSmartContract(String contractIdParam);
 }
