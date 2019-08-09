@@ -30,7 +30,6 @@ public class PaymentController {
         return ResponseEntity
                 .created(ServletUriComponentsBuilder
                         .fromCurrentRequest()
-                        .queryParam("token={token}")
                         .buildAndExpand(token)
                         .toUri())
                 .contentType(MediaType.TEXT_PLAIN)

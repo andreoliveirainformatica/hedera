@@ -5,7 +5,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
-public class PaymentCard extends Payment {
+public class PaymentCard {
 
 	private static final long serialVersionUID = 1L;
 
