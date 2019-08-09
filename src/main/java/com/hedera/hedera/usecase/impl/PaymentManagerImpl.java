@@ -3,6 +3,9 @@ package com.hedera.hedera.usecase.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hedera.hashgraph.sdk.HederaException;
+import com.hedera.hashgraph.sdk.account.AccountId;
+import com.hedera.hashgraph.sdk.proto.AccountID;
+import com.hedera.hedera.config.helper.TinybarsCalculatorHelper;
 import com.hedera.hedera.entitiy.Order;
 import com.hedera.hedera.entitiy.PaymentCard;
 import com.hedera.hedera.entitiy.Product;
@@ -25,10 +28,9 @@ import java.util.stream.Collectors;
 public class PaymentManagerImpl implements PaymentManager {
 
     private final ObjectMapper objectMapper;
-
     private final HederaClientGateway hederaClientGateway;
-
     private final SellerGateway sellerGateway;
+    private final TinybarsCalculatorHelper calculatorHelper;
 
     @Override
     public String createToken(PaymentCard paymentCard) {
@@ -65,9 +67,18 @@ public class PaymentManagerImpl implements PaymentManager {
 
         final Map<Seller, BigDecimal> sellerBigDecimalMap = splitPayment(order);
 
+        sellerBigDecimalMap.forEach(this::transferCredit);
+    }
 
-        //Efetuar Transferencia
-
+    private void transferCredit(Seller seller, BigDecimal value) {
+        try {
+            hederaClientGateway.transferCredit(
+                AccountId.fromString(seller.getAccountId()),
+                calculatorHelper.toTinybars(value.longValue() * 100));
+        } catch (HederaException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     private Map<Seller, BigDecimal> splitPayment(Order order) {
