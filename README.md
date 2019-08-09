@@ -10,6 +10,8 @@ SpringBoot
 
 SpringFox/Swagger - Documentação da API
 
+Mongodb
+
 ##Arquitetura:
 
 Clean architecture
