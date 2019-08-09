@@ -20,4 +20,6 @@ public class Seller {
     private BigDecimal commissionPercent;
 
     private String accountId;
+
+    private String contractId;
 }

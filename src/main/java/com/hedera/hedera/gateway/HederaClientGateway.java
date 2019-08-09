@@ -2,8 +2,11 @@ package com.hedera.hedera.gateway;
 
 import com.hedera.hashgraph.sdk.HederaException;
 import com.hedera.hashgraph.sdk.account.AccountId;
+import com.hedera.hashgraph.sdk.contract.ContractId;
 import com.hedera.hashgraph.sdk.crypto.Key;
 import com.hedera.hashgraph.sdk.file.FileId;
+import java.io.IOException;
+import java.math.BigDecimal;
 
 public interface HederaClientGateway {
 
@@ -18,4 +21,6 @@ public interface HederaClientGateway {
     FileId createFile(String json) throws HederaException;
 
     String getFileContent(String fileIdParam) throws HederaException;
+
+    ContractId createSmartContract(BigDecimal commission);
 }

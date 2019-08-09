@@ -1,16 +1,28 @@
 package com.hedera.hedera.gateway.impl;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.hedera.hashgraph.sdk.CallParams;
 import com.hedera.hashgraph.sdk.Client;
 import com.hedera.hashgraph.sdk.HederaException;
 import com.hedera.hashgraph.sdk.TransactionId;
+import com.hedera.hashgraph.sdk.TransactionReceipt;
 import com.hedera.hashgraph.sdk.account.AccountId;
 import com.hedera.hashgraph.sdk.account.CryptoTransferTransaction;
+import com.hedera.hashgraph.sdk.contract.ContractCallQuery;
+import com.hedera.hashgraph.sdk.contract.ContractCreateTransaction;
+import com.hedera.hashgraph.sdk.contract.ContractExecuteTransaction;
+import com.hedera.hashgraph.sdk.contract.ContractId;
 import com.hedera.hashgraph.sdk.crypto.Key;
 import com.hedera.hashgraph.sdk.crypto.ed25519.Ed25519PrivateKey;
 import com.hedera.hashgraph.sdk.file.FileContentsQuery;
 import com.hedera.hashgraph.sdk.file.FileCreateTransaction;
 import com.hedera.hashgraph.sdk.file.FileId;
+import com.hedera.hedera.config.helper.HederaHelper;
 import com.hedera.hedera.gateway.HederaClientGateway;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
@@ -94,5 +106,68 @@ public class HederaClientGatewayImpl implements HederaClientGateway {
                 .execute();
 
         return contents.getFileContents().getContents().toStringUtf8();
+    }
+
+    @Override
+    public ContractId createSmartContract(BigDecimal commission) {
+        var cl = HederaClientGatewayImpl.class.getClassLoader();
+
+        var gson = new Gson();
+
+        JsonObject jsonObject;
+
+        try {
+            try (var jsonStream = cl.getResourceAsStream("commission.json")) {
+                if (jsonStream == null) {
+                    throw new RuntimeException("failed to get commission.json");
+                }
+
+                jsonObject = gson.fromJson(new InputStreamReader(jsonStream), JsonObject.class);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+
+        var byteCodeHex = jsonObject.getAsJsonPrimitive("object")
+            .getAsString();
+        var byteCode = byteCodeHex.getBytes();
+
+        //var operatorKey = heder.getOperatorKey();
+
+        // create the contract's bytecode file
+        var fileTx = new FileCreateTransaction(hederaClient).setExpirationTime(
+            Instant.now()
+                .plus(Duration.ofSeconds(2592000)))
+            // Use the same key as the operator to "own" this file
+            .addKey(Ed25519PrivateKey.fromString(operatorKey).getPublicKey())
+            .setContents(byteCode);
+
+        TransactionReceipt fileReceipt = null;
+        try {
+            fileReceipt = fileTx.executeForReceipt();
+        } catch (HederaException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+        var newFileId = fileReceipt.getFileId();
+
+        var contractTx = new ContractCreateTransaction(hederaClient).setBytecodeFile(newFileId)
+            .setAutoRenewPeriod(Duration.ofHours(1))
+            .setGas(100_000_000)
+            .setConstructorParams(
+                CallParams.constructor()
+                    .addString(commission.toString()));
+
+        TransactionReceipt contractReceipt = null;
+        try {
+            contractReceipt = contractTx.executeForReceipt();
+        } catch (HederaException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+        var newContractId = contractReceipt.getContractId();
+
+        return newContractId;
     }
 }

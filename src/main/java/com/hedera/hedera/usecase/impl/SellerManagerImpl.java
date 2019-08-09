@@ -2,6 +2,7 @@ package com.hedera.hedera.usecase.impl;
 
 import com.hedera.hashgraph.sdk.HederaException;
 import com.hedera.hashgraph.sdk.account.AccountId;
+import com.hedera.hashgraph.sdk.contract.ContractId;
 import com.hedera.hashgraph.sdk.crypto.ed25519.Ed25519PrivateKey;
 import com.hedera.hedera.entitiy.Seller;
 import com.hedera.hedera.gateway.HederaClientGateway;
@@ -29,6 +30,8 @@ public class SellerManagerImpl implements SellerManager {
             Ed25519PrivateKey newKey = Ed25519PrivateKey.generate();
             AccountId accountId = hederaClientGateway.createAccount(newKey.getPublicKey());
             seller.setAccountId(accountId.toString());
+            ContractId contractId = hederaClientGateway.createSmartContract(seller.getCommissionPercent());
+            seller.setContractId(contractId.toString());
             sellerGateway.save(seller);
         } catch (HederaException ex) {
             log.error(ex.getMessage());
