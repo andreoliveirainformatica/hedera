@@ -26,7 +26,6 @@ public class SellerManagerImpl implements SellerManager {
     @Override
     public Seller createSelller(Seller seller) {
         try {
-            // TODO: 2019-08-08 buscar KEY
             Ed25519PrivateKey newKey = Ed25519PrivateKey.generate();
             AccountId accountId = hederaClientGateway.createAccount(newKey.getPublicKey());
             seller.setAccountId(accountId.toString());
