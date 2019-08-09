@@ -2,10 +2,19 @@ package com.hedera.hedera.gateway.impl;
 
 import com.hedera.hashgraph.sdk.Client;
 import com.hedera.hashgraph.sdk.HederaException;
+import com.hedera.hashgraph.sdk.TransactionId;
 import com.hedera.hashgraph.sdk.account.AccountId;
+import com.hedera.hashgraph.sdk.account.CryptoTransferTransaction;
 import com.hedera.hashgraph.sdk.crypto.Key;
+import com.hedera.hashgraph.sdk.crypto.ed25519.Ed25519PrivateKey;
+import com.hedera.hashgraph.sdk.file.FileContentsQuery;
+import com.hedera.hashgraph.sdk.file.FileCreateTransaction;
+import com.hedera.hashgraph.sdk.file.FileId;
 import com.hedera.hedera.gateway.HederaClientGateway;
+import java.time.Duration;
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,6 +22,12 @@ import org.springframework.stereotype.Component;
 public class HederaClientGatewayImpl implements HederaClientGateway {
 
     private final Client hederaClient;
+
+    @Value("${hedera.operator.id}")
+    private String operatorId;
+
+    @Value("${hedera.operator.key}")
+    private String operatorKey;
 
     @Override
     public AccountId createAccount(Key publicKey) throws HederaException {
@@ -70,6 +85,7 @@ public class HederaClientGatewayImpl implements HederaClientGateway {
 //        System.out.println("File content query results: " + contents.getFileContents().getContents().toStringUtf8());
     }
 
+    @Override
     public String getFileContent(String fileIdParam) throws HederaException {
 
         FileId fileId = FileId.fromString(fileIdParam);

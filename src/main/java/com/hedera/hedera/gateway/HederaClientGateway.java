@@ -3,11 +3,7 @@ package com.hedera.hedera.gateway;
 import com.hedera.hashgraph.sdk.HederaException;
 import com.hedera.hashgraph.sdk.account.AccountId;
 import com.hedera.hashgraph.sdk.crypto.Key;
-
-/**
- * Created by Grazeffe on 2019-08-08.
- * https://github.com/Grazeffe
- */
+import com.hedera.hashgraph.sdk.file.FileId;
 
 public interface HederaClientGateway {
 
@@ -18,4 +14,8 @@ public interface HederaClientGateway {
     void transferCredit(AccountId accountId, long amount) throws HederaException;
 
     void transferDebit(AccountId accountId, long amount) throws HederaException;
+
+    FileId createFile(String json) throws HederaException;
+
+    String getFileContent(String fileIdParam) throws HederaException;
 }
