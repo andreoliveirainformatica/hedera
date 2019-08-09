@@ -8,7 +8,6 @@ public interface PaymentManager {
 
     void payment(Order order);
 
-
     String createToken(PaymentCard paymentCard);
 
     PaymentCard getPaymentCar(String tokenId);

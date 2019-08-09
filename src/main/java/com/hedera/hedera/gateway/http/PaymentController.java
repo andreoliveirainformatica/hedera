@@ -4,8 +4,10 @@ import com.hedera.hedera.entitiy.PaymentCard;
 import com.hedera.hedera.usecase.PaymentManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -21,7 +23,17 @@ public class PaymentController {
             value = "token/",
             produces = {APPLICATION_JSON_VALUE})
     public ResponseEntity<String> createToken(@RequestBody PaymentCard paymentCard) {
-        return ResponseEntity.ok(paymentManager.createToken(paymentCard));
+
+        final String token = paymentManager.createToken(paymentCard);
+
+        return ResponseEntity
+                .created(ServletUriComponentsBuilder
+                        .fromCurrentRequest()
+                        .queryParam("token={token}")
+                        .buildAndExpand(token)
+                        .toUri())
+                .contentType(MediaType.TEXT_PLAIN)
+                .body(token);
     }
 
     @GetMapping(

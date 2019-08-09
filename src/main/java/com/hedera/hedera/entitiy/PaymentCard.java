@@ -3,6 +3,8 @@ package com.hedera.hedera.entitiy;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 public class PaymentCard extends Payment {
 
 	private static final long serialVersionUID = 1L;
@@ -30,5 +32,9 @@ public class PaymentCard extends Payment {
 	@Getter
 	@Setter
 	private String cardBrand;
+
+	@Getter
+	@Setter
+	private BigDecimal value;
 
 }
