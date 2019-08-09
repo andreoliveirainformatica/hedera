@@ -31,23 +31,6 @@ public class PaymentManagerImpl implements PaymentManager {
     private final SellerGateway sellerGateway;
 
     @Override
-    public void payment(Order order) {
-
-        final List<PaymentCard> payments = order
-                .getPayments()
-                .stream()
-                .map(payment -> getPaymentCar(payment.getToken()))
-                .collect(Collectors.toList());
-
-
-        final Map<Seller, BigDecimal> sellerBigDecimalMap = splitPayment(order);
-
-
-
-
-    }
-
-    @Override
     public String createToken(PaymentCard paymentCard) {
 
         try {
@@ -70,6 +53,22 @@ public class PaymentManagerImpl implements PaymentManager {
         }
     }
 
+    @Override
+    public void payment(Order order) {
+
+        final List<PaymentCard> payments = order
+                .getPayments()
+                .stream()
+                .map(payment -> getPaymentCar(payment.getToken()))
+                .collect(Collectors.toList());
+
+
+        final Map<Seller, BigDecimal> sellerBigDecimalMap = splitPayment(order);
+
+
+        //Efetuar Transferencia
+
+    }
 
     private Map<Seller, BigDecimal> splitPayment(Order order) {
 
