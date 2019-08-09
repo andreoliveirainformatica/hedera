@@ -30,10 +30,10 @@ public class ConvertController {
     }
 
     @GetMapping(
-            value = "totiny/{real}",
+            value = "totiny/{dollar}",
             produces = {APPLICATION_JSON_VALUE})
-    public ResponseEntity<Long> totiny(@PathVariable final BigDecimal real) {
-        return ResponseEntity.ok(tinybarsCalculatorHelper.toTinybars(real.multiply(BigDecimal.valueOf(100)).longValue()));
+    public ResponseEntity<Long> totiny(@PathVariable final BigDecimal dollar) {
+        return ResponseEntity.ok(tinybarsCalculatorHelper.toTinybars(dollar.multiply(BigDecimal.valueOf(100)).longValue()));
     }
 
 }
