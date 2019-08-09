@@ -5,10 +5,7 @@ import com.hedera.hedera.usecase.SellerManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -26,10 +23,11 @@ public class SellerController {
         return ResponseEntity.ok(sellerManager.createSelller(seller));
     }
 
-//    @GetMapping(
-//            produces = {APPLICATION_JSON_VALUE})
-//    public ResponseEntity<Long> getAccountSeller(Seller seller) {
-//        return ResponseEntity.ok(sellerManager.createSelller(seller));
-//    }
+    @GetMapping(
+            value = "balance/{sellerId}",
+            produces = {APPLICATION_JSON_VALUE})
+    public ResponseEntity<Long> getAccountSeller(@PathVariable String sellerId) {
+        return ResponseEntity.ok(sellerManager.getBalance(sellerId));
+    }
 
 }

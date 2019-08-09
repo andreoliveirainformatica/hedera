@@ -7,6 +7,7 @@ import com.hedera.hashgraph.sdk.crypto.Key;
 import com.hedera.hashgraph.sdk.crypto.ed25519.Ed25519PrivateKey;
 import com.hedera.hashgraph.sdk.file.FileContentsQuery;
 import com.hedera.hashgraph.sdk.file.FileCreateTransaction;
+import com.hedera.hashgraph.sdk.file.FileDeleteTransaction;
 import com.hedera.hashgraph.sdk.file.FileId;
 import com.hedera.hedera.gateway.HederaClientGateway;
 import lombok.RequiredArgsConstructor;
@@ -50,19 +51,9 @@ public class HederaClientGatewayImpl implements HederaClientGateway {
                 .executeForReceipt(); // Submits transaction to the network and returns receipt which contains file ID
 
         return newFile.getFileId();
-
-//        //Print the file ID to console
-//        System.out.println("The new file ID is " + newFile.getFileId().toString());
-//
-//        // Get file contents
-//        var contents = new FileContentsQuery(hederaClient)
-//                .setFileId(newFile.getFileId())
-//                .execute();
-//
-//        // Prints query results to console
-//        System.out.println("File content query results: " + contents.getFileContents().getContents().toStringUtf8());
     }
 
+    @Override
     public String getFileContent(String fileIdParam) throws HederaException {
 
         FileId fileId = FileId.fromString(fileIdParam);
@@ -71,5 +62,15 @@ public class HederaClientGatewayImpl implements HederaClientGateway {
                 .execute();
 
         return contents.getFileContents().getContents().toStringUtf8();
+    }
+
+    @Override
+    public void deleteFile(String fileIdParam) throws HederaException {
+
+        FileId fileId = FileId.fromString(fileIdParam);
+        new FileDeleteTransaction(hederaClient)
+                .setFileId(fileId)
+                .executeForReceipt();
+
     }
 }

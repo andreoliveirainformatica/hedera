@@ -48,4 +48,9 @@ public class SellerManagerImpl implements SellerManager {
         }
         return accountBalance;
     }
+
+    @Override
+    public Seller getSelller(String sellerId) {
+        return sellerGateway.findById(sellerId).orElseThrow(() -> new RuntimeException("Seller Not Found"));
+    }
 }

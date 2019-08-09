@@ -12,4 +12,6 @@ public interface PaymentManager {
 
     PaymentCard getPaymentCar(String tokenId);
 
+    void delete(String tokenId);
+
 }

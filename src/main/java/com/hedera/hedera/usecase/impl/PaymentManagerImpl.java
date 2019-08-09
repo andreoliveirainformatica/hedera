@@ -96,4 +96,13 @@ public class PaymentManagerImpl implements PaymentManager {
 
     }
 
+    @Override
+    public void delete(String tokenId) {
+        try {
+            hederaClientGateway.deleteFile(tokenId);
+        } catch (HederaException  e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
 }
