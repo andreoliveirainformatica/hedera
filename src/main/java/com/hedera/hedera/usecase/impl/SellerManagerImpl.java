@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 /**
  * Created by Grazeffe on 2019-08-08.
  * https://github.com/Grazeffe
@@ -49,6 +51,13 @@ public class SellerManagerImpl implements SellerManager {
             log.error(ex.getMessage());
         }
         return accountBalance;
+    }
+
+
+    @Override
+    public BigDecimal getCommission(String sellerId) {
+        Seller seller = sellerGateway.findById(sellerId).get();
+        return new BigDecimal(hederaClientGateway.getSmartContract(seller.getContractId()));
     }
 
     @Override

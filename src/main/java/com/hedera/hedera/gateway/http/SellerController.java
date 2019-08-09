@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
@@ -37,4 +39,10 @@ public class SellerController {
         return ResponseEntity.ok(sellerManager.getBalance(sellerId));
     }
 
+    @GetMapping(
+            value = "commision/{sellerId}",
+            produces = {APPLICATION_JSON_VALUE})
+    public ResponseEntity<BigDecimal> getcommissionSeller(@PathVariable String sellerId) {
+        return ResponseEntity.ok(sellerManager.getCommission(sellerId));
+    }
 }

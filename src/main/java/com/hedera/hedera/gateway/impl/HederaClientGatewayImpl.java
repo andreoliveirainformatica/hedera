@@ -2,16 +2,11 @@ package com.hedera.hedera.gateway.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.hedera.hashgraph.sdk.CallParams;
-import com.hedera.hashgraph.sdk.Client;
-import com.hedera.hashgraph.sdk.HederaException;
-import com.hedera.hashgraph.sdk.TransactionId;
-import com.hedera.hashgraph.sdk.TransactionReceipt;
+import com.hedera.hashgraph.sdk.*;
 import com.hedera.hashgraph.sdk.account.AccountId;
 import com.hedera.hashgraph.sdk.account.CryptoTransferTransaction;
 import com.hedera.hashgraph.sdk.contract.ContractCallQuery;
 import com.hedera.hashgraph.sdk.contract.ContractCreateTransaction;
-import com.hedera.hashgraph.sdk.contract.ContractExecuteTransaction;
 import com.hedera.hashgraph.sdk.contract.ContractId;
 import com.hedera.hashgraph.sdk.crypto.Key;
 import com.hedera.hashgraph.sdk.crypto.ed25519.Ed25519PrivateKey;
@@ -19,17 +14,14 @@ import com.hedera.hashgraph.sdk.file.FileContentsQuery;
 import com.hedera.hashgraph.sdk.file.FileCreateTransaction;
 import com.hedera.hashgraph.sdk.file.FileDeleteTransaction;
 import com.hedera.hashgraph.sdk.file.FileId;
-import com.hedera.hedera.config.helper.HederaHelper;
 import com.hedera.hedera.gateway.HederaClientGateway;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.math.BigDecimal;
-import java.time.Duration;
-import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -177,4 +169,21 @@ public class HederaClientGatewayImpl implements HederaClientGateway {
         }
 
     }
+
+    public String getSmartContract(String contractIdParam) {
+
+        try {
+            hederaClient.setMaxTransactionFee(100_000_000_000L);
+            var contractCallResult = new ContractCallQuery(hederaClient).setGas(30000)
+                    .setContractId(ContractId.fromString(contractIdParam))
+                    .setFunctionParameters(CallParams.function("comission"))
+                    .execute();
+            return contractCallResult.getString();
+
+        } catch (HederaException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+    }
+
 }

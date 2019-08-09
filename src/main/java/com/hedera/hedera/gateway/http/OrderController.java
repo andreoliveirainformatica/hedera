@@ -39,7 +39,7 @@ public class OrderController {
     }
 
     @PutMapping(
-            value = "{orderNumber}",
+            value = "payment/{orderNumber}",
             produces = {APPLICATION_JSON_VALUE})
     public ResponseEntity<Void> applyPayment(@PathVariable final String orderNumber) {
         paymentManager.payment(orderNumber);

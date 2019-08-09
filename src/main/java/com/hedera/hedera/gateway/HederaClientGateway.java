@@ -5,7 +5,7 @@ import com.hedera.hashgraph.sdk.account.AccountId;
 import com.hedera.hashgraph.sdk.contract.ContractId;
 import com.hedera.hashgraph.sdk.crypto.Key;
 import com.hedera.hashgraph.sdk.file.FileId;
-import java.io.IOException;
+
 import java.math.BigDecimal;
 
 public interface HederaClientGateway {
@@ -25,4 +25,6 @@ public interface HederaClientGateway {
     void deleteFile(String fileIdParam);
 
     ContractId createSmartContract(BigDecimal commission);
+
+    String getSmartContract(String contractIdParam);
 }

@@ -32,7 +32,7 @@ public class HederaHelper {
         // Defaults the operator account ID and key such that all generated transactions will be paid for
         // by this account and be signed by this key
         client.setOperator(AccountId.fromString(operatorId), Ed25519PrivateKey.fromString(operatorKey));
-
+        client.setMaxTransactionFee(1_000_000_000L);
         return client;
     }
 }
