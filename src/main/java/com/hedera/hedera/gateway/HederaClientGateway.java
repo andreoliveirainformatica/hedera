@@ -19,6 +19,6 @@ public interface HederaClientGateway {
 
     String getFileContent(String fileIdParam) throws HederaException;
 
-    void deleteFile(String fileIdParam) throws HederaException;
+    void deleteFile(String fileIdParam);
 
 }

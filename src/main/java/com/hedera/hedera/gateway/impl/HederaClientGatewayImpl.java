@@ -12,11 +12,12 @@ import com.hedera.hashgraph.sdk.file.FileCreateTransaction;
 import com.hedera.hashgraph.sdk.file.FileDeleteTransaction;
 import com.hedera.hashgraph.sdk.file.FileId;
 import com.hedera.hedera.gateway.HederaClientGateway;
-import java.time.Duration;
-import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.time.Duration;
+import java.time.Instant;
 
 @Component
 @RequiredArgsConstructor
@@ -87,12 +88,16 @@ public class HederaClientGatewayImpl implements HederaClientGateway {
     }
 
     @Override
-    public void deleteFile(String fileIdParam) throws HederaException {
+    public void deleteFile(String fileIdParam) {
 
         FileId fileId = FileId.fromString(fileIdParam);
-        new FileDeleteTransaction(hederaClient)
-                .setFileId(fileId)
-                .executeForReceipt();
+        try {
+            new FileDeleteTransaction(hederaClient)
+                    .setFileId(fileId)
+                    .executeForReceipt();
+        } catch (HederaException e) {
+            throw new RuntimeException(e.getMessage());
+        }
 
     }
 }
