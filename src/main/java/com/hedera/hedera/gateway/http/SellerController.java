@@ -1,13 +1,12 @@
 package com.hedera.hedera.gateway.http;
 
+import com.hedera.hashgraph.sdk.contract.ContractInfo;
 import com.hedera.hedera.entitiy.Seller;
 import com.hedera.hedera.usecase.SellerManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -40,9 +39,10 @@ public class SellerController {
     }
 
     @GetMapping(
-            value = "commision/{sellerId}",
+            value = "contract/{sellerId}",
             produces = {APPLICATION_JSON_VALUE})
-    public ResponseEntity<BigDecimal> getcommissionSeller(@PathVariable String sellerId) {
-        return ResponseEntity.ok(sellerManager.getCommission(sellerId));
+    public ResponseEntity<ContractInfo> getcommissionSeller(@PathVariable String sellerId) {
+        final ContractInfo contractInfo = sellerManager.getContractInfo(sellerId);
+        return ResponseEntity.ok(contractInfo);
     }
 }

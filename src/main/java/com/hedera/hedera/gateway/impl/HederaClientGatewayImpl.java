@@ -5,9 +5,10 @@ import com.google.gson.JsonObject;
 import com.hedera.hashgraph.sdk.*;
 import com.hedera.hashgraph.sdk.account.AccountId;
 import com.hedera.hashgraph.sdk.account.CryptoTransferTransaction;
-import com.hedera.hashgraph.sdk.contract.ContractCallQuery;
 import com.hedera.hashgraph.sdk.contract.ContractCreateTransaction;
 import com.hedera.hashgraph.sdk.contract.ContractId;
+import com.hedera.hashgraph.sdk.contract.ContractInfo;
+import com.hedera.hashgraph.sdk.contract.ContractInfoQuery;
 import com.hedera.hashgraph.sdk.crypto.Key;
 import com.hedera.hashgraph.sdk.crypto.ed25519.Ed25519PrivateKey;
 import com.hedera.hashgraph.sdk.file.FileContentsQuery;
@@ -170,15 +171,22 @@ public class HederaClientGatewayImpl implements HederaClientGateway {
 
     }
 
-    public String getSmartContract(String contractIdParam) {
+    public ContractInfo getSmartContract(String contractIdParam) {
 
         try {
-            hederaClient.setMaxTransactionFee(100_000_000_000L);
-            var contractCallResult = new ContractCallQuery(hederaClient).setGas(30000)
+            hederaClient.setMaxTransactionFee(2045672927286L);
+
+            final ContractInfo execute = new ContractInfoQuery(hederaClient)
                     .setContractId(ContractId.fromString(contractIdParam))
-                    .setFunctionParameters(CallParams.function("comission"))
                     .execute();
-            return contractCallResult.getString();
+
+//            var contractCallResult = new ContractCallQuery(hederaClient).setGas(30000)
+//                    .setContractId(ContractId.fromString(contractIdParam))
+//                    .setFunctionParameters(CallParams.function("comission"))
+//                    .execute();
+//            return contractCallResult.getString();
+
+            return execute;
 
         } catch (HederaException e) {
             throw new RuntimeException(e.getMessage());

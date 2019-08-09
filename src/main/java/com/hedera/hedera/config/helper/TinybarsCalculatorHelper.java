@@ -10,12 +10,11 @@ public class TinybarsCalculatorHelper {
 
   private static final long CENTS_DOLAR_ONE_HBAR = 12;
 
-  private static final long FACTOR_DOLAR_TO_REAL = 4;
 
   private static final Double TINYBAR_REPRESENTS_ONE_CENT = (TINYBAR_FACTOR / (CENTS_DOLAR_ONE_HBAR * 1.0));
 
   public long toRealInCents(final long tinybars) {
-    return (tinybars / TINYBAR_REPRESENTS_ONE_CENT.longValue()) * FACTOR_DOLAR_TO_REAL;
+    return (tinybars / TINYBAR_REPRESENTS_ONE_CENT.longValue());
   }
 
   public long toTinybars(final long amountInCents) {

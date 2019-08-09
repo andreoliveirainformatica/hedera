@@ -1,8 +1,7 @@
 package com.hedera.hedera.usecase;
 
+import com.hedera.hashgraph.sdk.contract.ContractInfo;
 import com.hedera.hedera.entitiy.Seller;
-
-import java.math.BigDecimal;
 
 public interface SellerManager {
 
@@ -12,5 +11,5 @@ public interface SellerManager {
 
     Seller getSelller(final String sellerId);
 
-    BigDecimal getCommission(String sellerId);
+    ContractInfo getContractInfo(String sellerId);
 }
