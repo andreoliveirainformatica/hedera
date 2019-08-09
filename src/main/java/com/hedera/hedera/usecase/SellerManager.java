@@ -7,4 +7,6 @@ public interface SellerManager {
     Seller createSelller(final Seller seller);
 
     long getBalance(final String sellerId);
+
+    Seller getSelller(final String sellerId);
 }

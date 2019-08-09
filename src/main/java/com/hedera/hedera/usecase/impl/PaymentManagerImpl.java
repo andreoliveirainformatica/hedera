@@ -4,22 +4,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hedera.hashgraph.sdk.HederaException;
 import com.hedera.hashgraph.sdk.account.AccountId;
-import com.hedera.hashgraph.sdk.proto.AccountID;
 import com.hedera.hedera.config.helper.TinybarsCalculatorHelper;
-import com.hedera.hedera.entitiy.Order;
-import com.hedera.hedera.entitiy.PaymentCard;
-import com.hedera.hedera.entitiy.Product;
-import com.hedera.hedera.entitiy.Seller;
+import com.hedera.hedera.entitiy.*;
 import com.hedera.hedera.gateway.HederaClientGateway;
 import com.hedera.hedera.gateway.SellerGateway;
+import com.hedera.hedera.usecase.OrderManager;
 import com.hedera.hedera.usecase.PaymentManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -31,6 +29,7 @@ public class PaymentManagerImpl implements PaymentManager {
     private final HederaClientGateway hederaClientGateway;
     private final SellerGateway sellerGateway;
     private final TinybarsCalculatorHelper calculatorHelper;
+    private final OrderManager orderManager;
 
     @Override
     public String createToken(PaymentCard paymentCard) {
@@ -56,13 +55,15 @@ public class PaymentManagerImpl implements PaymentManager {
     }
 
     @Override
-    public void payment(Order order) {
+    public void payment(String orderNumber) {
 
-        final List<PaymentCard> payments = order
-                .getPayments()
-                .stream()
-                .map(payment -> getPaymentCar(payment.getToken()))
-                .collect(Collectors.toList());
+        final Order order = orderManager.findById(orderNumber);
+
+        new ArrayList<>(order
+                .getPayments())
+                .forEach(p -> {
+                    hederaClientGateway.deleteFile(p.getToken());
+                });
 
 
         final Map<Seller, BigDecimal> sellerBigDecimalMap = splitPayment(order);
@@ -72,9 +73,10 @@ public class PaymentManagerImpl implements PaymentManager {
 
     private void transferCredit(Seller seller, BigDecimal value) {
         try {
+            final BigDecimal valueToTransfer = value.multiply((BigDecimal.valueOf(100).subtract(seller.getCommissionPercent())).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_EVEN));
             hederaClientGateway.transferCredit(
                 AccountId.fromString(seller.getAccountId()),
-                calculatorHelper.toTinybars(value.longValue() * 100));
+                calculatorHelper.toTinybars(valueToTransfer.longValue() * 100));
         } catch (HederaException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -105,6 +107,12 @@ public class PaymentManagerImpl implements PaymentManager {
         return map;
 
 
+    }
+
+    @Override
+    public void delete(String tokenId) {
+
+            hederaClientGateway.deleteFile(tokenId);
     }
 
 }

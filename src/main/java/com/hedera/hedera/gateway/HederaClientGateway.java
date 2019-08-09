@@ -22,5 +22,7 @@ public interface HederaClientGateway {
 
     String getFileContent(String fileIdParam) throws HederaException;
 
+    void deleteFile(String fileIdParam);
+
     ContractId createSmartContract(BigDecimal commission);
 }

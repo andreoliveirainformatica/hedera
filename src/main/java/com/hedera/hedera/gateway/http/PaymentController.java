@@ -4,6 +4,7 @@ import com.hedera.hedera.entitiy.PaymentCard;
 import com.hedera.hedera.usecase.PaymentManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,14 @@ public class PaymentController {
             produces = {APPLICATION_JSON_VALUE})
     public ResponseEntity<PaymentCard> getPaymentCard2(@PathVariable final String tokenId) {
         return ResponseEntity.ok(paymentManager.getPaymentCar(tokenId));
+    }
+
+    @DeleteMapping(
+            value = "token/{tokenId}",
+            produces = {APPLICATION_JSON_VALUE})
+    public ResponseEntity<Void> deletePaymentCard2(@PathVariable final String tokenId) {
+         paymentManager.delete(tokenId);
+         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
 }

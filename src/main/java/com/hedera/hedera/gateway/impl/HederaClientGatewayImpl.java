@@ -1,8 +1,5 @@
 package com.hedera.hedera.gateway.impl;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.hedera.hashgraph.sdk.CallParams;
 import com.hedera.hashgraph.sdk.Client;
 import com.hedera.hashgraph.sdk.HederaException;
 import com.hedera.hashgraph.sdk.TransactionId;
@@ -17,6 +14,7 @@ import com.hedera.hashgraph.sdk.crypto.Key;
 import com.hedera.hashgraph.sdk.crypto.ed25519.Ed25519PrivateKey;
 import com.hedera.hashgraph.sdk.file.FileContentsQuery;
 import com.hedera.hashgraph.sdk.file.FileCreateTransaction;
+import com.hedera.hashgraph.sdk.file.FileDeleteTransaction;
 import com.hedera.hashgraph.sdk.file.FileId;
 import com.hedera.hedera.config.helper.HederaHelper;
 import com.hedera.hedera.gateway.HederaClientGateway;
@@ -28,6 +26,9 @@ import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.time.Duration;
+import java.time.Instant;
 
 @Component
 @RequiredArgsConstructor
@@ -84,17 +85,6 @@ public class HederaClientGatewayImpl implements HederaClientGateway {
                 .executeForReceipt(); // Submits transaction to the network and returns receipt which contains file ID
 
         return newFile.getFileId();
-
-//        //Print the file ID to console
-//        System.out.println("The new file ID is " + newFile.getFileId().toString());
-//
-//        // Get file contents
-//        var contents = new FileContentsQuery(hederaClient)
-//                .setFileId(newFile.getFileId())
-//                .execute();
-//
-//        // Prints query results to console
-//        System.out.println("File content query results: " + contents.getFileContents().getContents().toStringUtf8());
     }
 
     @Override
@@ -169,5 +159,19 @@ public class HederaClientGatewayImpl implements HederaClientGateway {
         var newContractId = contractReceipt.getContractId();
 
         return newContractId;
+    }
+
+    @Override
+    public void deleteFile(String fileIdParam) {
+
+        FileId fileId = FileId.fromString(fileIdParam);
+        try {
+            new FileDeleteTransaction(hederaClient)
+                    .setFileId(fileId)
+                    .executeForReceipt();
+        } catch (HederaException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
     }
 }
