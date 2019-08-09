@@ -103,6 +103,8 @@ public class HederaClientGatewayImpl implements HederaClientGateway {
 
     @Override
     public ContractId createSmartContract(BigDecimal commission) {
+        hederaClient.setMaxTransactionFee(1_000_000_000L);
+
         var cl = HederaClientGatewayImpl.class.getClassLoader();
 
         var gson = new Gson();
@@ -125,8 +127,6 @@ public class HederaClientGatewayImpl implements HederaClientGateway {
         var byteCodeHex = jsonObject.getAsJsonPrimitive("object")
             .getAsString();
         var byteCode = byteCodeHex.getBytes();
-
-        //var operatorKey = heder.getOperatorKey();
 
         // create the contract's bytecode file
         var fileTx = new FileCreateTransaction(hederaClient).setExpirationTime(
