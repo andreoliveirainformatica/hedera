@@ -30,7 +30,7 @@ public class PaymentManagerImpl implements PaymentManager {
     private final ObjectMapper objectMapper;
     private final HederaClientGateway hederaClientGateway;
     private final SellerGateway sellerGateway;
-        private final TinybarsCalculatorHelper calculatorHelper;
+    private final TinybarsCalculatorHelper calculatorHelper;
 
     @Override
     public String createToken(PaymentCard paymentCard) {
