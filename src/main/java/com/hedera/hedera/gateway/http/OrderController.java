@@ -1,12 +1,13 @@
 package com.hedera.hedera.gateway.http;
 
 import com.hedera.hedera.entitiy.Order;
-import com.hedera.hedera.entitiy.PaymentCard;
-import com.hedera.hedera.usecase.PaymentManager;
+import com.hedera.hedera.usecase.OrderManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -16,31 +17,29 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final PaymentManager paymentManager;
+    private final OrderManager orderManager;
 
     @PostMapping(
             produces = {APPLICATION_JSON_VALUE})
-    public ResponseEntity<String> createOrder(@RequestBody Order order) {
+    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
 
-//        final String token = paymentManager.createToken(paymentCard);
-//
-//        return ResponseEntity
-//                .created(ServletUriComponentsBuilder
-//                        .fromCurrentRequest()
-//                        .queryParam("token={token}")
-//                        .buildAndExpand(token)
-//                        .toUri())
-//                .contentType(MediaType.TEXT_PLAIN)
-//                .body(token);
+        orderManager.create(order);
 
-        return null;
+        return ResponseEntity
+                .created(ServletUriComponentsBuilder
+                        .fromCurrentRequest()
+                        .queryParam("orderNumber={orderNumber}")
+                        .buildAndExpand(order)
+                        .toUri())
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(order);
     }
 
     @GetMapping(
-            value = "token/{tokenId}",
+            value = "{orderNumber}",
             produces = {APPLICATION_JSON_VALUE})
-    public ResponseEntity<PaymentCard> getPaymentCard2(@PathVariable final String tokenId) {
-        return ResponseEntity.ok(paymentManager.getPaymentCar(tokenId));
+    public ResponseEntity<Order> getOrder(@PathVariable final String orderNumber) {
+        return ResponseEntity.ok(orderManager.findById(orderNumber));
     }
 
 }
