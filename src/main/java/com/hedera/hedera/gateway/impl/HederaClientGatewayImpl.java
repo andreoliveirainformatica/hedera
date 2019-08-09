@@ -2,15 +2,10 @@ package com.hedera.hedera.gateway.impl;
 
 import com.hedera.hashgraph.sdk.Client;
 import com.hedera.hashgraph.sdk.HederaException;
-import com.hedera.hashgraph.sdk.Transaction;
-import com.hedera.hashgraph.sdk.TransactionId;
 import com.hedera.hashgraph.sdk.account.AccountId;
-import com.hedera.hashgraph.sdk.account.CryptoTransferTransaction;
 import com.hedera.hashgraph.sdk.crypto.Key;
 import com.hedera.hedera.gateway.HederaClientGateway;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,9 +13,6 @@ import org.springframework.stereotype.Component;
 public class HederaClientGatewayImpl implements HederaClientGateway {
 
     private final Client hederaClient;
-
-    @Value("${hedera.operator.id}")
-    private String operatorId;
 
     @Override
     public AccountId createAccount(Key publicKey) throws HederaException {
@@ -30,7 +22,6 @@ public class HederaClientGatewayImpl implements HederaClientGateway {
 
     @Override
     public long getAccountBalance(AccountId accountId) throws HederaException {
-        hederaClient.setMaxTransactionFee(100_000_000L);
         return hederaClient.getAccountBalance(accountId);
     }
 
@@ -50,5 +41,42 @@ public class HederaClientGatewayImpl implements HederaClientGateway {
             .addSender(accountId, amount)
             .addRecipient(AccountId.fromString(operatorId), amount)
             .execute();
+    }
+
+    @Override
+    public FileId createFile(String json) throws HederaException {
+        // Content to be stored in the file
+        var fileContents = json.getBytes();
+        hederaClient.setMaxTransactionFee(100_000_000L);
+
+        // Create the new file and set its properties
+        var newFile = new FileCreateTransaction(hederaClient)
+                .addKey(Ed25519PrivateKey.fromString(operatorKey).getPublicKey()) // The public key of the owner of the file
+                .setContents(fileContents) // Contents of the file
+                .setExpirationTime(Instant.now().plus(Duration.ofSeconds(2592000))) // Set file expiration time in seconds
+                .executeForReceipt(); // Submits transaction to the network and returns receipt which contains file ID
+
+        return newFile.getFileId();
+
+//        //Print the file ID to console
+//        System.out.println("The new file ID is " + newFile.getFileId().toString());
+//
+//        // Get file contents
+//        var contents = new FileContentsQuery(hederaClient)
+//                .setFileId(newFile.getFileId())
+//                .execute();
+//
+//        // Prints query results to console
+//        System.out.println("File content query results: " + contents.getFileContents().getContents().toStringUtf8());
+    }
+
+    public String getFileContent(String fileIdParam) throws HederaException {
+
+        FileId fileId = FileId.fromString(fileIdParam);
+        var contents = new FileContentsQuery(hederaClient)
+                .setFileId(fileId)
+                .execute();
+
+        return contents.getFileContents().getContents().toStringUtf8();
     }
 }

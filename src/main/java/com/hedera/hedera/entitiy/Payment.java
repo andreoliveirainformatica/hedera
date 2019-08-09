@@ -1,11 +1,11 @@
 package com.hedera.hedera.entitiy;
 
-import java.math.BigDecimal;
+import lombok.Data;
 
+@Data
 public class Payment {
 
-    private TypePayment type;
+    private String token;
 
-    BigDecimal value;
 
 }

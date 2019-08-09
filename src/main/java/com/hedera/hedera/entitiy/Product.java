@@ -13,6 +13,6 @@ public class Product {
 
     private BigDecimal quantity;
 
-    private Seller seller;
+    private String sellerId;
 
 }
